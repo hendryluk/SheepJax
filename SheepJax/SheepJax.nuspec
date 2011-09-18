@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>SheepJax</id>
-    <version>1.1.10</version>
+    <version>1.2.0</version>
     <authors>Hendry Luk</authors>
     <description>ASP.Net MVC library for Ajax, Hijax, and Commet</description>
     <language>en-US</language>
