@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>SheepJax</id>
+    <version>1.1.10</version>
+    <authors>Hendry Luk</authors>
+    <description>ASP.Net MVC library for Ajax, Hijax, and Commet</description>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="4.0.2" />
+      <dependency id="Castle.Core" version="2.5.2"/>
+      <dependency id="WebActivator" version="1.4.2"/>
+      <dependency id="Rx-Main" version="1.0.10621" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\SheepJax.dll" target="lib" />
+    <file src="Scripts\sheepJax.js"  target="Content\Scripts\sheepJax-1.1.0.js" />
+  </files>
+</package>

@@ -1,0 +1,91 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/f:SheepJaxProxyGenerator.cs" caret="445" fromTop="14" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/f:LongPollHttpModule.cs" caret="938" fromTop="21" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/f:ProxyTest.cs" caret="945" fromTop="15" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:InProcCommandBusTest.cs" caret="134" fromTop="6" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/f:PollableTaskConverter.cs" caret="512" fromTop="14" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/f:ProxyTest.cs" caret="65" fromTop="0" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/f:ProxyTest.cs" caret="496" fromTop="14" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/f:ProxyTest.cs" caret="955" fromTop="15" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:InProcCommandBusTest.cs" caret="77" fromTop="3" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir IsNull="False">
+    </NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="TestFixture" priority="0" />
+      <Item value="Test" priority="1" />
+      <Item value="public" priority="2" />
+      <Item value="void" priority="2" />
+      <Item value="SheepJaxed" priority="0" />
+      <Item value="cmd" priority="1" />
+      <Item value="var" priority="3" />
+      <Item value="new" priority="3" />
+      <Item value="object" priority="0" />
+      <Item value="jax" priority="2" />
+      <Item value="element0" priority="0" />
+      <Item value="Should`1" priority="0" />
+      <Item value="SheepJaxProxyGenerator" priority="0" />
+      <Item value="ViewResult" priority="0" />
+      <Item value="Controller`0" priority="2" />
+      <Item value="con" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@SheepJax.SheepJaxed">
+      <Item value="On`1" priority="0" />
+      <Item value="Dynamic`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:SheepJax.SheepJaxResult`1">
+      <Item value="Invocations" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IEnumerable`1">
+      <Item value="Count`1" priority="0" />
+      <Item value="ElementAt`1" priority="1" />
+      <Item value="Should`0" priority="1" />
+      <Item value="ShouldHave`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Int32">
+      <Item value="ShouldBe`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:SheepJax.SheepJaxInvoke">
+      <Item value="FunctionName" priority="1" />
+      <Item value="Args" priority="1" />
+      <Item value="Invoking`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.String">
+      <Item value="ShouldBe`0" priority="0" />
+      <Item value="Should`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FluentAssertions.Assertions.GenericCollectionAssertions`1">
+      <Item value="HaveCount`0" priority="0" />
+      <Item value="BeEquivalentTo`0" priority="1" />
+      <Item value="Match`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FluentAssertions.Assertions.StringAssertions">
+      <Item value="Be`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@SheepJax.SheepJaxProxyGenerator">
+      <Item value="Create`1" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>
