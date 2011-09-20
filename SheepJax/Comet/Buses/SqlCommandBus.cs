@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -10,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using SheepJax.RxHelpers;
 using SheepJax.DataHelpers;
-using System.Linq;
 
 namespace SheepJax.Comet.Buses
 {
@@ -21,7 +19,6 @@ namespace SheepJax.Comet.Buses
 
         private readonly ReaderWriterLockSlim _cacheLock = new ReaderWriterLockSlim();
         private readonly LazyPublisher<SqlCommandMessage> _messageAdded;
-        private readonly Dictionary<Guid, SqlCommandMessage> _gcSubjects = new Dictionary<Guid, SqlCommandMessage>();
         private static readonly TimeSpan PollDbInterval = TimeSpan.FromMilliseconds(400);
         private static readonly TimeSpan DbGcInterval = TimeSpan.FromSeconds(10);
         private byte[] _lastTimestamp = null;
@@ -40,28 +37,10 @@ namespace SheepJax.Comet.Buses
 
         private Task DbGc()
         {
-            const string disposeGcSubjects = "delete SheepJaxMessages where ClientId = @clientId and Timestamp < @timestamp";
             const string disposeOld = "delete SheepJaxMessages where CreatedUtcTime < dateadd(minute, -10, GetUtcDate())";
 
             var con = _connectionFactory();
-            return con.WithinTransaction(tx =>
-            {
-                var cmds = _gcSubjects.ToArray().Select(x=>
-                            {
-                                _gcSubjects.Remove(x.Key);
-                                return new SqlCommand(disposeGcSubjects, con, tx)
-                                        {
-                                            Parameters =
-                                                {
-                                                    new SqlParameter("clientId", x.Key),
-                                                    new SqlParameter("timestamp", x.Value.Timestamp)
-                                                }
-                                        };
-                            }).ToList();
-                cmds.Add(new SqlCommand(disposeOld, con, tx));
-
-                return cmds.Sequentially(cmd => cmd.ExecuteNonQueryAsync(), (t,i) => true);
-            });
+            return con.WithinTransaction(tx => new SqlCommand(disposeOld, con, tx).ExecuteNonQueryAsync());
         }
 
         private Task PollDb(IObserver<SqlCommandMessage> observer)
@@ -167,7 +146,6 @@ namespace SheepJax.Comet.Buses
             if (node == null)
                 return;
 
-            _gcSubjects[pollId] = node.Value;
             node = node.Previous;
             Task.Factory.StartNew(() =>
                     {
