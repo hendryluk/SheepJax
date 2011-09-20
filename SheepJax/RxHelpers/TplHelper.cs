@@ -204,34 +204,34 @@ namespace SheepJax.RxHelpers
             return source.Success(x => selector(x.Result));
         }
 
-        public static Task Sequentially<T, TResult>(this IEnumerable<T> enumerable, Func<T, Task<TResult>> perform, Func<TResult, bool> shouldMoveNext)
+        public static Task Sequentially<T, TResult>(this IEnumerable<T> enumerable, Func<T, Task<TResult>> perform, Func<Task, TResult, bool> shouldMoveNext)
         {
             var enumerator = enumerable.GetEnumerator();
 
             if(enumerator.MoveNext())
             {
                 return DoWhile(() => perform(enumerator.Current),
-                    result => shouldMoveNext(result) && enumerator.MoveNext());
+                    (task, result) => shouldMoveNext(task, result) && enumerator.MoveNext());
             }
             return Empty;
         }
 
-        public static Task DoWhile(Func<Task> perform, Func<bool> shouldRepeat)
+        public static Task DoWhile(Func<Task> perform, Func<Task, bool> shouldRepeat)
         {
             return perform().ContinueWith(task =>
             {
-                if (task.IsFaulted || task.IsCanceled || !shouldRepeat())
+                if (!shouldRepeat(task))
                     return task;
 
                 return DoWhile(perform, shouldRepeat);
             }).Unwrap();
         }
 
-        public static Task<T> DoWhile<T>(Func<Task<T>> perform, Func<T, bool> shouldRepeat)
+        public static Task<T> DoWhile<T>(Func<Task<T>> perform, Func<Task, T, bool> shouldRepeat)
         {
             return perform().ContinueWith(task =>
                         {
-                            if (task.IsFaulted || task.IsCanceled || !shouldRepeat(task.Result))
+                            if (task.IsFaulted || task.IsCanceled || !shouldRepeat(task, task.Result))
                                 return task;
 
                             return DoWhile(perform, shouldRepeat);

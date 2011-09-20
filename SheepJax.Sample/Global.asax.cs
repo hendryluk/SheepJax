@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using SheepJax.Comet.Buses;
 
 namespace SheepJax.Sample
 {
@@ -35,6 +38,8 @@ namespace SheepJax.Sample
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            SheepJaxed.PollingCommandBus = new SqlCommandBus(() => new SqlConnection(ConfigurationManager.ConnectionStrings["SheepJax"].ConnectionString));
         }
     }
 }

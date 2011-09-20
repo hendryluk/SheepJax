@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -21,84 +22,85 @@ namespace SheepJax.Comet.Buses
         private readonly ReaderWriterLockSlim _cacheLock = new ReaderWriterLockSlim();
         private readonly LazyPublisher<SqlCommandMessage> _messageAdded;
         private readonly Dictionary<Guid, SqlCommandMessage> _gcSubjects = new Dictionary<Guid, SqlCommandMessage>();
-        private static readonly TimeSpan PollDbInterval = TimeSpan.FromSeconds(1);
+        private static readonly TimeSpan PollDbInterval = TimeSpan.FromMilliseconds(400);
         private static readonly TimeSpan DbGcInterval = TimeSpan.FromSeconds(10);
         private byte[] _lastTimestamp = null;
 
         public SqlCommandBus(Func<SqlConnection> connectionFactory)
         {
             _connectionFactory = connectionFactory;
-            _messageAdded = new LazyPublisher<SqlCommandMessage>(()=>
+            _messageAdded = new LazyPublisher<SqlCommandMessage>(observer=>
                 {
                     var isDisposed = false;
-                    TplHelper.DoWhile(()=> PollDb().Delay(PollDbInterval), ()=> !isDisposed);
-                    TplHelper.DoWhile(() => DbGc().Delay(DbGcInterval), () => !isDisposed);
+                    TplHelper.DoWhile(() => PollDb(observer).Delay(PollDbInterval), _=> !isDisposed);
+                    TplHelper.DoWhile(() => DbGc().Delay(DbGcInterval), _=> !isDisposed);
                     return Disposable.Create(() => isDisposed = true);
                 });
         }
 
         private Task DbGc()
         {
-            const string disposeGcSubjects = "delete SheepJaxMessages where PollId=@pollId and Timestamp < @timestamp";
-            const string disposeOld = "delete SheepJaxMessages where CreatedUtcTime < select dateadd(minute, -10, GetUtcDate())";
+            const string disposeGcSubjects = "delete SheepJaxMessages where ClientId = @clientId and Timestamp < @timestamp";
+            const string disposeOld = "delete SheepJaxMessages where CreatedUtcTime < dateadd(minute, -10, GetUtcDate())";
 
             var con = _connectionFactory();
             return con.WithinTransaction(tx =>
             {
                 var cmds = _gcSubjects.ToArray().Select(x=>
-                                                 {
-                                                     _gcSubjects.Remove(x.Key);
-                                                     return new SqlCommand(disposeGcSubjects, con, tx)
-                                                                {
-                                                                    Parameters =
-                                                                        {
-                                                                            new SqlParameter("pollId", x.Key),
-                                                                            new SqlParameter("timestamp", x.Value)
-                                                                        }
-                                                                };
-                                                 }).ToList();
+                            {
+                                _gcSubjects.Remove(x.Key);
+                                return new SqlCommand(disposeGcSubjects, con, tx)
+                                        {
+                                            Parameters =
+                                                {
+                                                    new SqlParameter("clientId", x.Key),
+                                                    new SqlParameter("timestamp", x.Value.Timestamp)
+                                                }
+                                        };
+                            }).ToList();
                 cmds.Add(new SqlCommand(disposeOld, con, tx));
 
-                return Task.Factory.ContinueWhenAll(
-                    cmds.Select(cmd=> cmd.ExecuteNonQueryAsync()).ToArray(),
-                    tasks => tx.Commit());
+                return cmds.Sequentially(cmd => cmd.ExecuteNonQueryAsync(), (t,i) => true);
             });
         }
 
-        private Task PollDb()
+        private Task PollDb(IObserver<SqlCommandMessage> observer)
         {
-            const string sql = "select MessageId, ClientId, Message, Timestamp from SheepJaxMessages";
+            const string sql = "select MessageId, ClientId, Message, Timestamp from SheepJaxMessages where CreatedUtcTime > dateadd(minute, -10, GetUtcDate())";
 
             return _connectionFactory().WithinTransaction(tx =>
             {
                 var cmd = new SqlCommand(sql, tx.Connection, tx);
                 if (_lastTimestamp != null)
                 {
-                    cmd.CommandText += " where timestamp > @lastTimestamp";
+                    cmd.CommandText += " and timestamp > @lastTimestamp";
                     cmd.Parameters.Add(new SqlParameter("lastTimestamp", _lastTimestamp));
                 }
+                cmd.CommandText += " order by timestamp asc";
                 return cmd.ExecuteReaderAsync().Catch()
                     .Select(reader =>
                     {
                         _cacheLock.EnterWriteLock();
                         try
                         {
-                            while (reader.NextResult())
+                            while (reader.Read())
                             {
                                 var timestamp = _lastTimestamp = new byte[8];
                                 reader.GetBytes(3, 0, timestamp, 0, 8);
-                                _cache.AddLast(new SqlCommandMessage
-                                        {
-                                            MessageId = reader.GetGuid(0),
-                                            ClientId = reader.GetGuid(1),
-                                            Message = reader.GetString(2),
-                                            Timestamp = timestamp
-                                        });
+                                var msg = new SqlCommandMessage
+                                                            {
+                                                                MessageId = reader.GetGuid(0),
+                                                                ClientId = reader.GetGuid(1),
+                                                                Message = reader.GetString(2),
+                                                                Timestamp = timestamp
+                                                            };
+                                _cache.AddLast(msg);
+                                observer.OnNext(msg);
                             }
                         }
                         finally
                         {
-                            _cacheLock.EnterWriteLock();
+                            _cacheLock.ExitWriteLock();
                             reader.Close();
                         }
                     });
@@ -138,11 +140,13 @@ namespace SheepJax.Comet.Buses
         {
             return Observable.Create<SqlCommandMessage>(obs =>
                 {
+                    Trace.WriteLine("Observation! " + (previousNode==null?"null": previousNode.Value.MessageId.ToString()));
+                    var lastNode = previousNode;
                     while (true)
                     {
-                        var lastNode = previousNode;
-                        for (var next = (previousNode == null) ? _cache.First: previousNode.Next; next != null; next = next.Next)
+                        for (var next = (lastNode == null) ? _cache.First : lastNode.Next; next != null; next = next.Next)
                         {
+                            Trace.WriteLine("Pushing from cache: " + next.Value.MessageId);
                             obs.OnNext(next.Value);
                             lastNode = next;
                         }
