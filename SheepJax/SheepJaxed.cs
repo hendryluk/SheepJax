@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SheepJax.Comet;
+using SheepJax.Comet.Buses;
 
 namespace SheepJax
 {

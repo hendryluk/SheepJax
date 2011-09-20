@@ -1,0 +1,290 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/f:SheepJaxProxyGenerator.cs" caret="445" fromTop="14" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/f:ProxyTest.cs" caret="945" fromTop="15" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:InProcCommandBusTest.cs" caret="134" fromTop="6" />
+      <File id="5EA6B906-E40E-4A3E-8298-728A93951326/f:Scheduler.cs" caret="372" fromTop="0" />
+      <File id="5EA6B906-E40E-4A3E-8298-728A93951326/f:Observable.cs" caret="299888" fromTop="2" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:ObservableHelper.cs" caret="554" fromTop="8" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/f:LongPollHttpModule.cs" caret="1774" fromTop="14" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/f:SheepJaxInvoke.cs" caret="61" fromTop="3" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/f:CometExtensions.cs" caret="743" fromTop="15" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/f:PollableTaskConverter.cs" caret="514" fromTop="16" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="1568" fromTop="13" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:LazyPublisher.cs" caret="1777" fromTop="46" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:InProcCommandBus.cs" caret="1680" fromTop="43" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/f:SheepJaxed.cs" caret="0" fromTop="0" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:ICommandBus.cs" caret="38" fromTop="2" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:SqlMessageBus.cs" caret="593" fromTop="15" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:InProcCommandBus.cs" caret="1680" fromTop="25" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:InProcCommandBus.cs" caret="1680" fromTop="15" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:InProcCommandBus.cs" caret="1680" fromTop="29" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:InProcCommandBus.cs" caret="1680" fromTop="28" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:InProcCommandBus.cs" caret="1680" fromTop="14" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/f:CometExtensions.cs" caret="540" fromTop="12" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/f:CometExtensions.cs" caret="769" fromTop="16" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/f:LongPollHttpModule.cs" caret="357" fromTop="12" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:ObservableHelper.cs" caret="781" fromTop="15" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:ObservableHelper.cs" caret="1340" fromTop="30" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:ObservableHelper.cs" caret="1029" fromTop="18" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="298" fromTop="8" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="624" fromTop="14" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="501" fromTop="10" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:ObservableHelper.cs" caret="222" fromTop="8" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:ObservableHelper.cs" caret="353" fromTop="12" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:ObservableHelper.cs" caret="1210" fromTop="27" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:ObservableHelper.cs" caret="997" fromTop="20" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="664" fromTop="15" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:ObservableHelper.cs" caret="554" fromTop="8" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="1421" fromTop="24" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="2091" fromTop="23" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="2272" fromTop="29" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="1375" fromTop="12" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="1815" fromTop="21" />
+      <File id="37F1A959-EA71-48B8-9641-069B3D2D4498/d:Comet/f:ObservableBatcherTest.cs" caret="1173" fromTop="6" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:RxHelpers/f:LazyPublisher.cs" caret="1777" fromTop="46" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:InProcCommandBus.cs" caret="1680" fromTop="43" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:SqlMessageBus.cs" caret="6937" fromTop="177" />
+      <File id="3BB2E4CB-E442-4D70-BF79-8AA70C419539/d:Comet/d:Buses/f:ICommandBus.cs" caret="38" fromTop="2" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir IsNull="False">
+    </NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="TestFixture" priority="0" />
+      <Item value="Test" priority="1" />
+      <Item value="public" priority="2" />
+      <Item value="void" priority="2" />
+      <Item value="SheepJaxed" priority="0" />
+      <Item value="cmd" priority="1" />
+      <Item value="var" priority="3" />
+      <Item value="new" priority="3" />
+      <Item value="object" priority="0" />
+      <Item value="jax" priority="2" />
+      <Item value="element0" priority="0" />
+      <Item value="Should`1" priority="0" />
+      <Item value="SheepJaxProxyGenerator" priority="0" />
+      <Item value="ViewResult" priority="0" />
+      <Item value="Controller`0" priority="2" />
+      <Item value="con" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@SheepJax.SheepJaxed">
+      <Item value="On`1" priority="0" />
+      <Item value="Dynamic`0" priority="0" />
+      <Item value="PollingCommandBus" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:SheepJax.SheepJaxResult`1">
+      <Item value="Invocations" priority="2" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IEnumerable`1">
+      <Item value="Count`1" priority="0" />
+      <Item value="ElementAt`1" priority="1" />
+      <Item value="Should`0" priority="1" />
+      <Item value="ShouldHave`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Int32">
+      <Item value="ShouldBe`1" priority="0" />
+      <Item value="Should`0" priority="14" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:SheepJax.SheepJaxInvoke">
+      <Item value="FunctionName" priority="1" />
+      <Item value="Args" priority="1" />
+      <Item value="Invoking`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.String">
+      <Item value="ShouldBe`0" priority="0" />
+      <Item value="Should`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FluentAssertions.Assertions.GenericCollectionAssertions`1">
+      <Item value="HaveCount`0" priority="54" />
+      <Item value="BeEquivalentTo`0" priority="109" />
+      <Item value="Match`1" priority="0" />
+      <Item value="Equal`0" priority="26" />
+      <Item value="Should`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FluentAssertions.Assertions.StringAssertions">
+      <Item value="Be`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@SheepJax.SheepJaxProxyGenerator">
+      <Item value="Create`1" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="CSharpCodeCompletionContext">
+      <Item value="string" priority="185" />
+      <Item value="_queues" priority="63" />
+      <Item value="return" priority="95" />
+      <Item value="Observable" priority="33" />
+      <Item value="Observable`0" priority="63" />
+      <Item value="queue" priority="31" />
+      <Item value="x" priority="127" />
+      <Item value="Action`0" priority="126" />
+      <Item value="onNext" priority="63" />
+      <Item value="setTimeout" priority="32" />
+      <Item value="resetTimeout" priority="64" />
+      <Item value="activateTimeout" priority="31" />
+      <Item value="var" priority="287" />
+      <Item value="obs" priority="223" />
+      <Item value="BatchInterval" priority="32" />
+      <Item value="LongPollTimeout" priority="31" />
+      <Item value="tcs" priority="63" />
+      <Item value="cb" priority="31" />
+      <Item value="IFormatProvider`0" priority="63" />
+      <Item value="if" priority="31" />
+      <Item value="received" priority="63" />
+      <Item value="null" priority="31" />
+      <Item value="IEnumerable" priority="31" />
+      <Item value="new" priority="127" />
+      <Item value="SheepJaxInvoke" priority="16" />
+      <Item value="object" priority="94" />
+      <Item value="throw" priority="31" />
+      <Item value="timer" priority="31" />
+      <Item value="subscriber" priority="31" />
+      <Item value="TestFixture" priority="16" />
+      <Item value="Test" priority="31" />
+      <Item value="void" priority="31" />
+      <Item value="TimeSpan" priority="16" />
+      <Item value="System" priority="63" />
+      <Item value="Reactive" priority="134" />
+      <Item value="Microsoft" priority="95" />
+      <Item value="Testing" priority="80" />
+      <Item value="TestScheduler`0" priority="117" />
+      <Item value="ReactiveAssert`0" priority="85" />
+      <Item value="ReactiveTest" priority="16" />
+      <Item value="OnNext`1" priority="159" />
+      <Item value="Subscribe`0" priority="63" />
+      <Item value="CreateHotObservable`1" priority="31" />
+      <Item value="ReactiveTest`0" priority="26" />
+      <Item value="TestScheduler" priority="29" />
+      <Item value="test" priority="127" />
+      <Item value="batchSize" priority="31" />
+      <Item value="schedule" priority="127" />
+      <Item value="results" priority="127" />
+      <Item value="self" priority="63" />
+      <Item value="IScheduler" priority="16" />
+      <Item value="Batch`1" priority="31" />
+      <Item value="T`0" priority="31" />
+      <Item value="timespan" priority="31" />
+      <Item value="Scheduler`0" priority="31" />
+      <Item value="scheduler" priority="31" />
+      <Item value="public" priority="31" />
+      <Item value="ObservableCanCompleteBeforeBatch`0" priority="31" />
+      <Item value="IDisposable`0" priority="31" />
+      <Item value="subscribe" priority="32" />
+      <Item value="sut" priority="160" />
+      <Item value="List" priority="28" />
+      <Item value="list" priority="127" />
+      <Item value="ToString`0" priority="31" />
+      <Item value="TimeSpan`0" priority="31" />
+      <Item value="subscribed" priority="31" />
+      <Item value="Concurrency" priority="26" />
+      <Item value="Subjects" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Reactive.Linq.Observable">
+      <Item value="Empty`1" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:SheepJax.RxHelpers.QueueSubject`1">
+      <Item value="Select`2" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Lazy`1">
+      <Item value="Value" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IDictionary`2">
+      <Item value="Remove`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.IObservable`1">
+      <Item value="Buffer`3" priority="53" />
+      <Item value="Where`1" priority="26" />
+      <Item value="Timeout`1" priority="53" />
+      <Item value="Subscribe`0" priority="135" />
+      <Item value="ForEach`1" priority="53" />
+      <Item value="Finally`1" priority="26" />
+      <Item value="SubscribeOn`1" priority="26" />
+      <Item value="Batch`1" priority="26" />
+      <Item value="Take`1" priority="81" />
+      <Item value="Window`3" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.IList`1">
+      <Item value="Any`1" priority="26" />
+      <Item value="Should`0" priority="68" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Threading.Tasks.TaskCompletionSource`1">
+      <Item value="SetResult`0" priority="26" />
+      <Item value="Task" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Threading.Timer">
+      <Item value="Dispose`0" priority="54" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.IObserver`1">
+      <Item value="OnNext`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.TimeSpan">
+      <Item value="FromSeconds`0" priority="26" />
+      <Item value="FromTicks`0" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Microsoft.Reactive.Testing.Recorded`1">
+      <Item value="Value" priority="53" />
+      <Item value="Time" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Microsoft.Reactive.Testing.TestScheduler">
+      <Item value="CreateHotObservable`1" priority="53" />
+      <Item value="CreateObserver`1" priority="26" />
+      <Item value="Start`1" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Microsoft.Reactive.Testing.ITestableObservable`1">
+      <Item value="Batch`1" priority="14" />
+      <Item value="Subscribe`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:Microsoft.Reactive.Testing.ITestableObserver`1">
+      <Item value="Messages" priority="80" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Int64">
+      <Item value="Should`0" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:FluentAssertions.Assertions.IntegralAssertions`1">
+      <Item value="Be`0" priority="53" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reactive.Notification`1">
+      <Item value="Should`0" priority="14" />
+      <Item value="Value" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.Reactive.Concurrency.Scheduler">
+      <Item value="TaskPool" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Reactive.Concurrency.IScheduler">
+      <Item value="Schedule`1" priority="26" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.Collections.Generic.List`1">
+      <Item value="Add`0" priority="53" />
+      <Item value="Should`0" priority="53" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+  <UnitTestSessions>
+    <Session>
+      <Name>Session #1</Name>
+      <Elements>
+        <UnitTestElement Provider="nUnit" Id="SheepJax.Tests.Comet.ObservableBatcherTest" type="NUnitTestFixtureElement" Project="37F1A959-EA71-48B8-9641-069B3D2D4498" />
+        <UnitTestElement Provider="nUnit" Id="SheepJax.Tests.Comet.ObservableBatcherTest.ObservableCanCompleteBeforeBatch" ParentId="SheepJax.Tests.Comet.ObservableBatcherTest" type="NUnitTestElement" TypeName="SheepJax.Tests.Comet.ObservableBatcherTest" MethodName="ObservableCanCompleteBeforeBatch" Project="37F1A959-EA71-48B8-9641-069B3D2D4498" />
+        <UnitTestElement Provider="nUnit" Id="SheepJax.Tests.Comet.ObservableBatcherTest.ShouldOnlySubscribeOnce" ParentId="SheepJax.Tests.Comet.ObservableBatcherTest" type="NUnitTestElement" TypeName="SheepJax.Tests.Comet.ObservableBatcherTest" MethodName="ShouldOnlySubscribeOnce" Project="37F1A959-EA71-48B8-9641-069B3D2D4498" />
+      </Elements>
+    </Session>
+  </UnitTestSessions>
+</Configuration>

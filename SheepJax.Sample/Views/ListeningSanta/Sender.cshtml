@@ -1,0 +1,16 @@
+﻿@model object
+
+@{
+    ViewBag.Title = "Dear Santa";
+}
+
+<h1>Dear Santa,</h1>
+
+@using(Html.BeginForm(null, null))
+{
+    @Html.TextBox("message")
+    <input type="submit" name="act" value="Say good" />
+    <input type="submit" name="act" value="Say bad" />
+    <input type="submit" name="act" value="Shout" />
+    <input type="submit" name="act" value="Done" />
+}

@@ -1,0 +1,66 @@
+﻿@using System.Web.Mvc.Html
+@using SheepJax.Sample.Models
+@using SheepJaxDemo.Models
+@model IEnumerable<CartItem>
+
+@{
+    ViewBag.Title = "Cart";
+}
+
+<h1>Inbox</h1>
+
+<table id="products">
+    <head>
+        <th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Total Price</th>
+        </th>
+    </head>
+    <body>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.Price</td>
+                <td>
+                    @using(Html.BeginForm("UpdateItem", null, new{id= item.Id}))
+                    {
+                        @Html.TextBox("qty", item.Qty)
+                        <input type="submit" value="Update" />
+                    }
+                </td>
+                <td class="total-price">@item.TotalPrice</td>
+            </tr>
+        }
+    </body>
+</table>
+
+
+<script type="">
+    $(function () {
+        $("#products tr").each(function () {
+            var $item = $(this);
+            $item.find("form").submit(function (ev) {
+                ev.preventDefault();
+                $.sheepJax({
+                    url: $(this).attr("action"),
+                    data: $(this).serialize(),
+                    commands: {
+                        RemoveItem: function () {
+                            $item.remove();
+                        },
+                        ChangeTotalPrice: function (price) {
+                            $item.css({'background-color': 'yellow'});
+                            $item.find(".total-price").text(price);
+                        },
+                        MarkInvalid: function () {
+                            $item.css({ 'background-color': 'red' });
+                        }
+                    }
+                })
+            });
+        });
+    });
+</script>

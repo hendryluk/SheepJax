@@ -59,9 +59,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comet\CommetExtensions.cs" />
-    <Compile Include="Comet\ICommandBus.cs" />
-    <Compile Include="Comet\InProcCommandBus.cs" />
+    <Compile Include="Comet\ICommandMessage.cs" />
+    <Compile Include="DataHelpers\DbAsyncHelper.cs" />
+    <Compile Include="RxHelpers\LazyPublisher.cs" />
+    <Compile Include="Comet\Buses\SqlCommandBus.cs" />
+    <Compile Include="Comet\CometExtensions.cs" />
+    <Compile Include="Comet\Buses\ICommandBus.cs" />
+    <Compile Include="Comet\Buses\InProcCommandBus.cs" />
     <Compile Include="Comet\LongPollHttpModule.cs" />
     <Compile Include="Comet\PollableTask.cs" />
     <Compile Include="Comet\PollableTaskConverter.cs" />
@@ -69,8 +73,7 @@
     <Compile Include="IDefaultCommands.cs" />
     <Compile Include="PreApplicationStartCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RxHelpers\ObservableHelper.cs" />
-    <Compile Include="RxHelpers\QueueSubject.cs" />
+    <Compile Include="RxHelpers\TplHelper.cs" />
     <Compile Include="SheepJaxed.cs" />
     <Compile Include="SheepJaxInvoke.cs" />
     <Compile Include="SheepJaxProxyGenerator.cs" />

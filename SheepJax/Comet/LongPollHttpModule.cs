@@ -1,17 +1,21 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Reactive.Linq;
+using System.Xml.Linq;
+using Newtonsoft.Json;
 using SheepJax.RxHelpers;
 
 namespace SheepJax.Comet
 {
     public class LongPollHttpModule: IHttpModule, IHttpAsyncHandler
     {
-        private static readonly TimeSpan LongPollTimeout = TimeSpan.FromSeconds(15);
-        private static readonly TimeSpan BatchInterval = TimeSpan.FromMilliseconds(150);
+        private static readonly TimeSpan LongPollTimeout = TimeSpan.FromSeconds(1500);
+        private static readonly TimeSpan BatchInterval = TimeSpan.FromMilliseconds(80);
 
         public void Init(HttpApplication context)
         {
@@ -41,18 +45,28 @@ namespace SheepJax.Comet
             var tcs = new TaskCompletionSource<object>();
 
             context.ApplicationInstance.CompleteRequest();
-            var pollId = new Guid(context.Request["pollId"]);
+            var clientId = new Guid(context.Request["clientId"]);
+            var prevMsgIdReq = context.Request["prevMsgId"];
+            var prevMsgId = string.IsNullOrEmpty(prevMsgIdReq)?(Guid?)null: new Guid(prevMsgIdReq);
 
-            var timeout = new string[]{null}.ToObservable().Delay(LongPollTimeout);
+            var jsons = new List<CommandMessage>();
             
-            Observable.Create<string>(observer=> SheepJaxed.PollingCommandBus.Subscribe(pollId, observer.OnNext))
-                .Merge(timeout).Batch(BatchInterval).Take(1)
-                .Subscribe(jsons =>
-                               {
-                                   context.Response.Write("[" + string.Join(",", jsons.Where(x=> x!=null)) + "]");
-                                   tcs.SetResult(null);
-                                   cb(tcs.Task);
-                               });
+            var obs = SheepJaxed.PollingCommandBus.GetObservable(clientId, prevMsgId).Replay();
+            var subscription = obs.Connect();
+            obs.TakeUntil(Observable.Interval(LongPollTimeout))
+                .TakeUntil(obs.Take(1).Delay(BatchInterval))
+                .Subscribe(jsons.Add, ()=>
+                    {
+                        subscription.Dispose();
+                        if (jsons.Any())
+                            prevMsgId = jsons.Last().MessageId;
+
+                        var lastBit = prevMsgId == null ? "" : ", \"lastMsgId\": \"" + prevMsgId.Value.ToString("d") + "\"";
+                        context.Response.Write("{\"msgs\": [" + string.Join(",", jsons.Select(x => x.Message)) + "]" + lastBit + "}");
+                        tcs.SetResult(null);
+                        cb(tcs.Task);
+                    });
+
             return tcs.Task;
         }
 

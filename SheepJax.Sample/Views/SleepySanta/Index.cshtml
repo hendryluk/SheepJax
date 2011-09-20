@@ -1,0 +1,43 @@
+﻿@model object
+
+@{
+    ViewBag.Title = "Sleepy Santa";
+}
+
+<div style="background-color: yellow" id="Good">
+<h2>Good</h2>
+</div>
+
+<div style="background-color: Red; color: white" id="Bad">
+<h2>!!BAD!!</h2>
+</div>
+
+@using (Html.BeginForm("Baam", null))
+{
+    @Html.TextBox("nick")
+    <input type="submit" value="Do It!!" />
+}
+
+<script type="text/javascript">
+    $(function () {
+        var $good = $("#Good");
+        var $bad = $("#Bad");
+
+        $("form").sheepHijax({
+            commands: {
+                SayGood: function (msg) {
+                    $good.append($("<div>", { text: msg }));
+                },
+                SayBad: function (msg) {
+                    $bad.append($("<div>", { text: msg }));
+                },
+                Shout: function (msg) {
+                    alert(msg);
+                }
+            }
+        })
+    });
+
+</script>
+
+
