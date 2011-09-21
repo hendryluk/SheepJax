@@ -180,11 +180,16 @@ namespace SheepJax.AsyncHelpers
             return tcs.Task;
         }
 
-        private static Task<T> FromError<T>(Exception e)
+        public static Task<T> FromError<T>(Exception e)
         {
             var tcs = new TaskCompletionSource<T>();
             tcs.SetException(e);
             return tcs.Task;
+        }
+
+        public static Task FromErro(Exception e)
+        {
+            return FromError<object>(e);
         }
 
         private static Task<T> Cancelled<T>()
@@ -243,7 +248,7 @@ namespace SheepJax.AsyncHelpers
             return task.ContinueWith(t =>
                                   {
                                       var tcs = new TaskCompletionSource<Task>();
-                                      new Timer(_ => tcs.SetResult(task), null, timeSpan, TimeSpan.FromMilliseconds(-1));
+                                      new Timer(_ => tcs.SetResult(t), null, timeSpan, TimeSpan.FromMilliseconds(-1));
                                       return tcs.Task;
                                   }).Unwrap();
         }
