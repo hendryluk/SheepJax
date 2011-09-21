@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\sheepJax.js" />
+    <None Include="Sql\MessageStore.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

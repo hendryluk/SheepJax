@@ -1,11 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>SheepJax</id>
-    <version>1.2.1</version>
-    <authors>Hendry Luk</authors>
-    <description>ASP.Net MVC library for Ajax, Hijax, and reverse-Ajax (Commet)</description>
-    <language>en-US</language>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <licenseUrl>http://sheepjax.codeplex.com/license</licenseUrl>
+    <projectUrl>http://sheepjax.codeplex.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <tags>Ajax MVC Hijax Comet Long-Polling Reverse-Ajax ASP.NET Async Asynchronous jQuery Json Rx Reactive-Extensions TPL Proxy Node.JS SignalR</tags>
     <dependencies>
       <dependency id="jQuery" version="1.5.1" />
       <dependency id="Newtonsoft.Json" version="4.0.2" />

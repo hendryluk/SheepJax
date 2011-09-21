@@ -9,7 +9,7 @@ namespace SheepJax.Comet
 {
     public class LongPollHttpModule: IHttpModule, IHttpAsyncHandler
     {
-        private static readonly TimeSpan LongPollTimeout = TimeSpan.FromSeconds(1500);
+        private static readonly TimeSpan LongPollTimeout = TimeSpan.FromSeconds(20);
         private static readonly TimeSpan BatchInterval = TimeSpan.FromMilliseconds(80);
 
         public void Init(HttpApplication context)

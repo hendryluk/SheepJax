@@ -11,11 +11,11 @@ namespace SheepJax.Comet.Buses
 {
     public class InProcCommandBus: ICommandBus
     {
-        private readonly LinkedList<InProcMessage> _messages = new LinkedList<InProcMessage>();
+        private readonly LinkedList<CommandMessage> _messages = new LinkedList<CommandMessage>();
         private static readonly TimeSpan CollectGarbageInterval = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan MessageExpiry = TimeSpan.FromSeconds(120);
         private readonly ReaderWriterLockSlim _messagesLock = new ReaderWriterLockSlim();
-        private readonly Subject<InProcMessage> _messageAdded = new Subject<InProcMessage>(); 
+        private readonly Subject<CommandMessage> _messageAdded = new Subject<CommandMessage>(); 
 
         public InProcCommandBus()
         {
@@ -26,7 +26,7 @@ namespace SheepJax.Comet.Buses
         {
             var node = _messages.First;
             var now = DateTime.Now;
-            while(node != null && now - node.Value.DateTime > MessageExpiry)
+            while(node != null && now - node.Value.CreatedUtcTime > MessageExpiry)
             {
                 var nextNode = node.Next;
                 _messages.Remove(node);
@@ -40,11 +40,11 @@ namespace SheepJax.Comet.Buses
                 .Where(x => x.ClientId == clientId);
         }
 
-        private IObservable<InProcMessage> GetObservable()
+        private IObservable<CommandMessage> GetObservable()
         {
-            return Observable.Create<InProcMessage>(obs =>
+            return Observable.Create<CommandMessage>(obs =>
             {
-                LinkedListNode<InProcMessage> lastNode = null;
+                LinkedListNode<CommandMessage> lastNode = null;
                 while (true)
                 {
                     for (var next = (lastNode == null) ? _messages.First : lastNode.Next; next != null; next = next.Next)
@@ -53,7 +53,7 @@ namespace SheepJax.Comet.Buses
                         lastNode = next;
                     }
 
-                    if (!_messagesLock.TryEnterReadLock(0)) continue;
+                    if (!_messagesLock.TryEnterReadLock(10)) continue;
                     try
                     {
                         if (_messages.Last == lastNode)
@@ -98,24 +98,11 @@ namespace SheepJax.Comet.Buses
                     {
                         using(_messagesLock.BeginWriteLock())
                         {
-                            var message = new InProcMessage {ClientId = clientId, Message = msg};
+                            var message = new CommandMessage{ ClientId = clientId, Message = msg, CreatedUtcTime = DateTime.Now };
                             _messages.AddLast(message);
                             _messageAdded.OnNext(message);
                         }
                     });
-        }
-
-        
-
-        private class InProcMessage: CommandMessage
-        {
-            public DateTime DateTime { get; private set; }
-
-            public InProcMessage()
-            {
-                DateTime = DateTime.Now;
-                MessageId = Guid.NewGuid();
-            }
         }
     }
 }

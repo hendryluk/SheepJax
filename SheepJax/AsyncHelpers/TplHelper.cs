@@ -259,5 +259,10 @@ namespace SheepJax.AsyncHelpers
         {
             return FromException<object>(exception);
         }
+
+        public static Task Using<TDisposable>(TDisposable disposable, Func<TDisposable, Task> task) where TDisposable : IDisposable
+        {
+            return task(disposable).Finally(_ => disposable.Dispose());
+        }
     }
 }
