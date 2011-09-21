@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Reactive;
@@ -22,6 +23,16 @@ namespace SheepJax.Comet.Buses
         private static readonly TimeSpan PollDbInterval = TimeSpan.FromMilliseconds(400);
         private static readonly TimeSpan DbGcInterval = TimeSpan.FromSeconds(10);
         private byte[] _lastTimestamp = null;
+
+        private static SqlConnection GetConnection(string connectionName)
+        {
+            return new SqlConnection(ConfigurationManager.ConnectionStrings[connectionName].ConnectionString);
+        }
+
+        public SqlCommandBus(string connectionName)
+            :this(()=> GetConnection(connectionName))
+        {    
+        }
 
         public SqlCommandBus(Func<SqlConnection> connectionFactory)
         {

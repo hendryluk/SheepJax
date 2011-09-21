@@ -22,3 +22,5 @@ D:\Dev\Codeplex\SheepJax\SheepJax.Tests\bin\Release\System.Reactive.xml
 D:\Dev\Codeplex\SheepJax\SheepJax.Tests\obj\Release\ResolveAssemblyReference.cache
 D:\Dev\Codeplex\SheepJax\SheepJax.Tests\obj\Release\SheepJax.Tests.dll
 D:\Dev\Codeplex\SheepJax\SheepJax.Tests\obj\Release\SheepJax.Tests.pdb
+D:\Dev\Codeplex\SheepJax\SheepJax.Tests\bin\Release\Microsoft.Reactive.Testing.dll
+D:\Dev\Codeplex\SheepJax\SheepJax.Tests\bin\Release\Microsoft.Reactive.Testing.xml

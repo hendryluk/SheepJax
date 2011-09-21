@@ -39,7 +39,7 @@ namespace SheepJax.Sample
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            SheepJaxed.PollingCommandBus = new SqlCommandBus(() => new SqlConnection(ConfigurationManager.ConnectionStrings["SheepJax"].ConnectionString));
+            SheepJaxed.PollingCommandBus = new SqlCommandBus("SheepJax");
         }
     }
 }
