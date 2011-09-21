@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Reactive.Linq;
-using System.Xml.Linq;
-using Newtonsoft.Json;
-using SheepJax.RxHelpers;
 
 namespace SheepJax.Comet
 {
@@ -46,23 +41,19 @@ namespace SheepJax.Comet
 
             context.ApplicationInstance.CompleteRequest();
             var clientId = new Guid(context.Request["clientId"]);
-            var prevMsgIdReq = context.Request["prevMsgId"];
-            var prevMsgId = string.IsNullOrEmpty(prevMsgIdReq)?(Guid?)null: new Guid(prevMsgIdReq);
 
             var jsons = new List<CommandMessage>();
-            
-            var obs = SheepJaxed.PollingCommandBus.GetObservable(clientId, prevMsgId).Replay();
+
+            var bus = SheepJaxed.PollingCommandBus;
+            var obs = bus.GetObservable(clientId).Replay();
             var subscription = obs.Connect();
             obs.TakeUntil(Observable.Interval(LongPollTimeout))
                 .TakeUntil(obs.Take(1).Delay(BatchInterval))
                 .Subscribe(jsons.Add, ()=>
                     {
                         subscription.Dispose();
-                        if (jsons.Any())
-                            prevMsgId = jsons.Last().MessageId;
-
-                        var lastBit = prevMsgId == null ? "" : ", \"lastMsgId\": \"" + prevMsgId.Value.ToString("d") + "\"";
-                        context.Response.Write("{\"msgs\": [" + string.Join(",", jsons.Select(x => x.Message)) + "]" + lastBit + "}");
+                        context.Response.Write("[" + string.Join(",", jsons.Select(x => x.Message)) + "]");
+                        bus.Consumed(jsons.LastOrDefault());
                         tcs.SetResult(null);
                         cb(tcs.Task);
                     });

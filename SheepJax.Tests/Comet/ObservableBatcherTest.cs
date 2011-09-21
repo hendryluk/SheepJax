@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Reactive.Testing;
 using NUnit.Framework;
-using SheepJax.RxHelpers;
+using SheepJax.AsyncHelpers;
 using FluentAssertions;
 
 namespace SheepJax.Tests.Comet

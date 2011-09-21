@@ -5,7 +5,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using SheepJax.RxHelpers;
+using SheepJax.AsyncHelpers;
 
 namespace SheepJax.Comet.Buses
 {
@@ -34,39 +34,20 @@ namespace SheepJax.Comet.Buses
             }
         }
 
-        public IObservable<CommandMessage> GetObservable(Guid clientId, Guid? previousMessageId)
+        public IObservable<CommandMessage> GetObservable(Guid clientId)
         {
-            LinkedListNode<InProcMessage> previousNode = null;
-            if (previousMessageId.HasValue)
-            {
-                var lastNode = _messages.Last;
-                previousNode = FindNext(_messages.First, x => x.MessageId == previousMessageId) ?? lastNode;
-                ScheduleForGc(clientId, previousNode);
-            }
-
-            return GetObservable(previousNode)
+            return GetObservable()
                 .Where(x => x.ClientId == clientId);
         }
 
-        private static LinkedListNode<T> FindNext<T>(LinkedListNode<T> node, Func<T, bool> predicate)
-        {
-            while (node != null)
-            {
-                if (predicate(node.Value))
-                    return node;
-                node = node.Next;
-            }
-            return null;
-        }
-
-        private IObservable<InProcMessage> GetObservable(LinkedListNode<InProcMessage> previousNode)
+        private IObservable<InProcMessage> GetObservable()
         {
             return Observable.Create<InProcMessage>(obs =>
             {
+                LinkedListNode<InProcMessage> lastNode = null;
                 while (true)
                 {
-                    var lastNode = previousNode;
-                    for (var next = (previousNode == null) ? _messages.First : previousNode.Next; next != null; next = next.Next)
+                    for (var next = (lastNode == null) ? _messages.First : lastNode.Next; next != null; next = next.Next)
                     {
                         obs.OnNext(next.Value);
                         lastNode = next;
@@ -83,44 +64,48 @@ namespace SheepJax.Comet.Buses
             });
         }
 
-        private void ScheduleForGc(Guid pollId, LinkedListNode<InProcMessage> node)
+        public Task Consumed(CommandMessage last)
         {
-            if (node == null)
-                return;
+            if (last == null)
+                return TplHelper.Empty;
 
-            node = node.Previous;
-            Task.Factory.StartNew(() =>
+            using(_messagesLock.BeginUpgradeableReadLock())
             {
-                while (node != null)
-                {
-                    var previousNode = node.Previous;
-                    for (;
-                        previousNode != null && previousNode.Value.ClientId != pollId;
-                        previousNode = previousNode.Previous) ;
+                var node = _messages.Last;
+                while (node != null && node.Value != last)
+                    node = node.Previous;
 
-                    node.List.Remove(node);
-                    node = previousNode;
+                using (_messagesLock.BeginWriteLock())
+                {
+                    while (node != null)
+                    {
+                        var previousNode = node.Previous;
+                        while (previousNode != null && previousNode.Value.ClientId != node.Value.ClientId)
+                            previousNode = previousNode.Previous;
+
+                        node.List.Remove(node);
+                        node = previousNode;
+                    }
                 }
-            });
+            }
+
+            return TplHelper.Empty;
         }
 
         public IObserver<string> GetObserver(Guid clientId)
         {
             return Observer.Create<string>(msg =>
-                                               {
-                                                   _messagesLock.EnterWriteLock();
-                                                   try
-                                                   {
-                                                       var message = new InProcMessage {ClientId = clientId, Message = msg};
-                                                       _messages.AddLast(message);
-                                                       _messageAdded.OnNext(message);
-                                                   }
-                                                   finally
-                                                   {
-                                                       _messagesLock.ExitWriteLock();
-                                                   }
-                                               });
+                    {
+                        using(_messagesLock.BeginWriteLock())
+                        {
+                            var message = new InProcMessage {ClientId = clientId, Message = msg};
+                            _messages.AddLast(message);
+                            _messageAdded.OnNext(message);
+                        }
+                    });
         }
+
+        
 
         private class InProcMessage: CommandMessage
         {

@@ -79,25 +79,24 @@
                 var completed = false;
                 opt.commands._$CometDisconnect = function () { completed = true; };
 
-                var longPoll = function (prevMsgId) {
+                var longPoll = function () {
                     if (!completed) {
                         $.ajax({
                             dataType: "json",
                             url: "/SheepJax/LongPoll",
-                            data: { clientId: clientId, prevMsgId: prevMsgId },
+                            data: { clientId: clientId },
                             type: "POST",
                             success: function (data) {
-                                me.handleCallback(opt, data.msgs);
-                                setTimeout(function () { longPoll(data.lastMsgId); }, batchInterval);
+                                me.handleCallback(opt, data);
                             },
-                            error: function () {
-                                setTimeout(function () { longPoll(prevMsgId); }, batchInterval);
+                            complete: function () {
+                                setTimeout(longPoll, batchInterval);
                             }
                         });
                     }
                 };
 
-                setTimeout(function () { longPoll(""); }, batchInterval);
+                setTimeout(longPoll, batchInterval);
             }
         },
         addDefaultCommands: function (commands) {

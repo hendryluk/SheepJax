@@ -74,19 +74,18 @@
             FunctionUndefined: function (data, functionName) {
                 $.error('FunctionName ' + functionName + ' does not exist on the commands');
             },
-            LongPoll: function (pollId, batchInterval) {
+            CometConnect: function (clientId, batchInterval) {
                 var opt = this;
                 var completed = false;
-                opt.commands._$LongPollCompleted = function () { completed = true; };
+                opt.commands._$CometDisconnect = function () { completed = true; };
 
                 var longPoll = function () {
                     if (!completed) {
                         $.ajax({
                             dataType: "json",
                             url: "/SheepJax/LongPoll",
-                            data: "pollId=" + pollId,
+                            data: { clientId: clientId },
                             type: "POST",
-                            error: opt.error,
                             success: function (data) {
                                 me.handleCallback(opt, data);
                             },

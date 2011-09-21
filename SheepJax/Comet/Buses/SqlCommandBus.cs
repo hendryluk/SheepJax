@@ -7,7 +7,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SheepJax.RxHelpers;
+using SheepJax.AsyncHelpers;
 using SheepJax.DataHelpers;
 
 namespace SheepJax.Comet.Buses
@@ -59,28 +59,23 @@ namespace SheepJax.Comet.Buses
                 return cmd.ExecuteReaderAsync().Catch()
                     .Select(reader =>
                     {
-                        _cacheLock.EnterWriteLock();
-                        try
+                        using(reader)
+                        using(_cacheLock.BeginWriteLock())
                         {
                             while (reader.Read())
                             {
                                 var timestamp = _lastTimestamp = new byte[8];
                                 reader.GetBytes(3, 0, timestamp, 0, 8);
                                 var msg = new SqlCommandMessage
-                                                            {
-                                                                MessageId = reader.GetGuid(0),
-                                                                ClientId = reader.GetGuid(1),
-                                                                Message = reader.GetString(2),
-                                                                Timestamp = timestamp
-                                                            };
+                                                {
+                                                    MessageId = reader.GetGuid(0),
+                                                    ClientId = reader.GetGuid(1),
+                                                    Message = reader.GetString(2),
+                                                    Timestamp = timestamp
+                                                };
                                 _cache.AddLast(msg);
                                 observer.OnNext(msg);
                             }
-                        }
-                        finally
-                        {
-                            _cacheLock.ExitWriteLock();
-                            reader.Close();
                         }
                     });
             });
@@ -101,26 +96,17 @@ namespace SheepJax.Comet.Buses
                     .ContinueWith(t => tx.Commit()));
         }
 
-        public IObservable<CommandMessage> GetObservable(Guid clientId, Guid? previousMessageId)
+        public IObservable<CommandMessage> GetObservable(Guid clientId)
         {
-            LinkedListNode<SqlCommandMessage> previousNode = null;
-            if (previousMessageId.HasValue)
-            {
-                var lastNode = _cache.Last;
-                previousNode = FindNext(_cache.First, x => x.MessageId == previousMessageId) ?? lastNode;
-                ScheduleForGc(clientId, previousNode);
-            }
-
-            return GetObservable(previousNode)
+            return GetObservable()
                 .Where(x=> x.ClientId == clientId);
         }
 
-        private IObservable<SqlCommandMessage> GetObservable(LinkedListNode<SqlCommandMessage> previousNode)
+        private IObservable<SqlCommandMessage> GetObservable()
         {
             return Observable.Create<SqlCommandMessage>(obs =>
                 {
-                    Trace.WriteLine("Observation! " + (previousNode==null?"null": previousNode.Value.MessageId.ToString()));
-                    var lastNode = previousNode;
+                    LinkedListNode<SqlCommandMessage> lastNode = null;
                     while (true)
                     {
                         for (var next = (lastNode == null) ? _cache.First : lastNode.Next; next != null; next = next.Next)
@@ -140,6 +126,44 @@ namespace SheepJax.Comet.Buses
                     }
                 });
         }
+
+        public Task Consumed(CommandMessage last)
+        {
+            var msg = last as SqlCommandMessage;
+            if(msg == null)
+                return TplHelper.Empty;
+
+            const string sql = "delete SheepJaxMessages where ClientId=@clientId and timestamp<@timestamp";
+            var dbTask =_connectionFactory().WithinTransaction(tx => 
+                new SqlCommand(sql, tx.Connection, tx)
+                {
+                    Parameters = {
+                                    new SqlParameter("clientId", msg.ClientId), 
+                                    new SqlParameter("timestamp", msg.Timestamp)}
+                }.ExecuteNonQueryAsync());
+
+            using (_cacheLock.BeginUpgradeableReadLock())
+            {
+                var node = _cache.Last;
+                while (node != null && node.Value != last)
+                    node = node.Previous;
+
+                using (_cacheLock.BeginWriteLock())
+                {
+                    while (node != null)
+                    {
+                        var previousNode = node.Previous;
+                        while (previousNode != null && previousNode.Value.ClientId != node.Value.ClientId)
+                            previousNode = previousNode.Previous;
+
+                        node.List.Remove(node);
+                        node = previousNode;
+                    }
+                }
+            }
+            return dbTask;
+        }
+
 
         private void ScheduleForGc(Guid pollId, LinkedListNode<SqlCommandMessage> node)
         {
@@ -177,6 +201,8 @@ namespace SheepJax.Comet.Buses
         {
             return Observer.Create<string>(msg => SendMessage(clientId, msg));
         }
+
+        
 
         private class SqlCommandMessage : CommandMessage
         {

@@ -6,7 +6,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using SheepJax.Comet;
 
-namespace SheepJax.RxHelpers
+namespace SheepJax.AsyncHelpers
 {
     public class LazyPublisher<T> : IObservable<T> where T : CommandMessage
     {

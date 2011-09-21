@@ -61,7 +61,7 @@
   <ItemGroup>
     <Compile Include="Comet\ICommandMessage.cs" />
     <Compile Include="DataHelpers\DbAsyncHelper.cs" />
-    <Compile Include="RxHelpers\LazyPublisher.cs" />
+    <Compile Include="AsyncHelpers\LazyPublisher.cs" />
     <Compile Include="Comet\Buses\SqlCommandBus.cs" />
     <Compile Include="Comet\CometExtensions.cs" />
     <Compile Include="Comet\Buses\ICommandBus.cs" />
@@ -73,7 +73,8 @@
     <Compile Include="IDefaultCommands.cs" />
     <Compile Include="PreApplicationStartCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RxHelpers\TplHelper.cs" />
+    <Compile Include="AsyncHelpers\SynchronisationHelper.cs" />
+    <Compile Include="AsyncHelpers\TplHelper.cs" />
     <Compile Include="SheepJaxed.cs" />
     <Compile Include="SheepJaxInvoke.cs" />
     <Compile Include="SheepJaxProxyGenerator.cs" />

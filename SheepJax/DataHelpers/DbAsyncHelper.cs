@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using SheepJax.RxHelpers;
+using SheepJax.AsyncHelpers;
 
 namespace SheepJax.DataHelpers
 {
@@ -20,8 +20,20 @@ namespace SheepJax.DataHelpers
 
         public static Task<T> WithinTransaction<T>(this SqlConnection conn, Func<SqlTransaction, Task<T>> task)
         {
-            var tx = conn.BeginTransaction();
-            return task(tx).Finally(t => tx.Dispose());
+            SqlTransaction tx = null;
+            try
+            {
+                conn.Open();
+                tx = conn.BeginTransaction();
+                return task(tx).Finally(t => { tx.Dispose(); conn.Dispose(); });
+            }
+            catch (Exception e)
+            {
+                conn.Dispose();
+                if (tx != null)
+                    tx.Dispose();
+                return TplHelper.FromException<T>(e);
+            }
         }
 
         public static Task WithinTransaction(this SqlConnection conn, Func<SqlTransaction, Task> task)

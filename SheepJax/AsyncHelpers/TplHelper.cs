@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SheepJax.RxHelpers
+namespace SheepJax.AsyncHelpers
 {
     internal static class TplHelper
     {
@@ -248,11 +248,16 @@ namespace SheepJax.RxHelpers
                                   }).Unwrap();
         }
 
-        public static Task FromException(Exception exception)
+        public static Task<T> FromException<T>(Exception exception)
         {
-            var tcs = new TaskCompletionSource<object>();
+            var tcs = new TaskCompletionSource<T>();
             tcs.SetException(exception);
             return tcs.Task;
+        }
+
+        public static Task FromException(Exception exception)
+        {
+            return FromException<object>(exception);
         }
     }
 }
