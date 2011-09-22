@@ -39,7 +39,9 @@ namespace SheepJax.AsyncHelpers
             {
                 _observers.Add(observer);
                 if (_runningTask == null)
+                {
                     _runningTask = _whenHasObserver(_observersProxy);
+                }
             }
 
             return Disposable.Create(delegate

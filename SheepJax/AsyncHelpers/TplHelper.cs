@@ -236,7 +236,7 @@ namespace SheepJax.AsyncHelpers
         {
             return perform().ContinueWith(task =>
                         {
-                            if (task.IsFaulted || task.IsCanceled || !shouldRepeat(task, task.Result))
+                            if (!shouldRepeat(task, task.Result))
                                 return task;
 
                             return DoWhile(perform, shouldRepeat);
@@ -248,9 +248,9 @@ namespace SheepJax.AsyncHelpers
             return task.ContinueWith(t =>
                                   {
                                       var tcs = new TaskCompletionSource<Task>();
-                                      new Timer(_ => tcs.SetResult(t), null, timeSpan, TimeSpan.FromMilliseconds(-1));
+                                      new Timer(_ => tcs.SetResult(t)).Change(timeSpan, TimeSpan.FromMilliseconds(-1));
                                       return tcs.Task;
-                                  }).Unwrap();
+                                  }).Unwrap().Unwrap();
         }
 
         public static Task<T> FromException<T>(Exception exception)

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SheepJax")]
-[assembly: AssemblyDescription("ASP.Net MVC library for Ajax, Hijax, and reverse-Ajax (Commet)")]
+[assembly: AssemblyDescription("ASP.Net MVC library for Ajax, Hijax, and reverse-Ajax (Comet)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Hendry Luk")]
 [assembly: AssemblyProduct("SheepJax")]
