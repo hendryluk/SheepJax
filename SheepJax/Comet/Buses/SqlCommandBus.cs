@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Logging;
 using SheepJax.AsyncHelpers;
 using SheepJax.DataHelpers;
 
@@ -15,6 +15,8 @@ namespace SheepJax.Comet.Buses
 {
     public class SqlCommandBus: ICommandBus
     {
+        private readonly ILog _logger = LogManager.GetLogger<SqlCommandBus>();
+
         private readonly Func<SqlConnection> _connectionFactory;
         private readonly LinkedList<SqlCommandMessage> _cache = new LinkedList<SqlCommandMessage>();
 
@@ -66,13 +68,13 @@ namespace SheepJax.Comet.Buses
             _messageAdded = new LazyPublisher<SqlCommandMessage>(observer=>
                 {
                     var isDisposed = false;
-                    _pollDbTask = _pollDbTask.ContinueWith(t => TplHelper.DoWhile(() => PollDb(observer).Delay(PollDbInterval), _ => !isDisposed)).Catch().Unwrap();
-                    _dbGcTask = _dbGcTask.ContinueWith(t=>  TplHelper.DoWhile(() => DbGc().Delay(DbGcInterval), _ => !isDisposed)).Catch().Unwrap();
+                    _pollDbTask = _pollDbTask.ContinueWith(t => TplHelper.DoWhile(() => PollDb(observer).Delay(PollDbInterval), _ => !isDisposed)).Unwrap();
+                    _dbGcTask = _dbGcTask.ContinueWith(t => TplHelper.DoWhile(() => DbGc().Delay(DbGcInterval), _ => !isDisposed)).Unwrap();
                     return Disposable.Create(() => isDisposed = true);
                 });
         }
 
-        private Task DbGc()
+        protected virtual Task DbGc()
         {
             const string sql = "delete SheepJaxMessages where CreatedUtcTime < dateadd(minute, -10, GetUtcDate())";
 
@@ -80,10 +82,10 @@ namespace SheepJax.Comet.Buses
                 TplHelper.Using(new SqlCommand(sql, tx.Connection, tx), cmd =>
                     cmd.ExecuteNonQueryAsync().Success(_ => tx.Commit())
                 )
-            );
+            ).Catch(_logger);
         }
 
-        private Task PollDb(IObserver<SqlCommandMessage> observer)
+        protected virtual Task PollDb(IObserver<SqlCommandMessage> observer)
         {
             const string sql = "select ClientId, Message, CreatedUtcTime, Timestamp from SheepJaxMessages where CreatedUtcTime > dateadd(minute, -10, GetUtcDate())";
 
@@ -119,7 +121,7 @@ namespace SheepJax.Comet.Buses
                                 }
                         });
                 })
-            );
+            ).Catch(_logger);
           }
 
         private void SendMessage(Guid clientId, string msg)
@@ -135,13 +137,13 @@ namespace SheepJax.Comet.Buses
                                         new SqlParameter("message", msg)
                                     }
                         },
-                        cmd => cmd.ExecuteNonQueryAsync().ContinueWith(t => tx.Commit())
+                        cmd => cmd.ExecuteNonQueryAsync().Finally(t => tx.Commit())
                      )
                  );
-            }).Catch();
+            }).Catch(_logger);
         }
 
-        public IObservable<CommandMessage> GetObservable(Guid clientId)
+        public virtual IObservable<CommandMessage> GetObservable(Guid clientId)
         {
             return GetObservable()
                 .Where(x=> x.ClientId == clientId);
@@ -171,7 +173,7 @@ namespace SheepJax.Comet.Buses
                 });
         }
 
-        public Task Consumed(CommandMessage last)
+        public virtual Task Consumed(CommandMessage last)
         {
             var msg = last as SqlCommandMessage;
             if(msg == null)
@@ -187,7 +189,7 @@ namespace SheepJax.Comet.Buses
                 }
                 , cmd=> cmd.ExecuteNonQueryAsync().Finally(_=> tx.Commit())
                 )
-            ).Catch();
+            ).Catch(_logger);
 
             using (_cacheLock.BeginUpgradeableReadLock())
             {
@@ -211,13 +213,12 @@ namespace SheepJax.Comet.Buses
             return dbTask;
         }
 
-
-        public IObserver<string> GetObserver(Guid clientId)
+        public virtual IObserver<string> GetObserver(Guid clientId)
         {
             return Observer.Create<string>(msg => SendMessage(clientId, msg));
         }
 
-        private class SqlCommandMessage : CommandMessage
+        protected class SqlCommandMessage : CommandMessage
         {
             public byte[] Timestamp { get; set; }
         }

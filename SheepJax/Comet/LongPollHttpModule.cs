@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Reactive.Linq;
+using Common.Logging;
 
 namespace SheepJax.Comet
 {
     public class LongPollHttpModule: IHttpModule, IHttpAsyncHandler
     {
+        private readonly ILog _logger = LogManager.GetLogger<LongPollHttpModule>();
+
         private static readonly TimeSpan LongPollTimeout = TimeSpan.FromSeconds(20);
         private static readonly TimeSpan BatchInterval = TimeSpan.FromMilliseconds(80);
 
@@ -49,13 +52,23 @@ namespace SheepJax.Comet
             var subscription = obs.Connect();
             obs.TakeUntil(Observable.Interval(LongPollTimeout))
                 .TakeUntil(obs.Take(1).Delay(BatchInterval))
-                .Subscribe(jsons.Add, ()=>
+                .Subscribe(jsons.Add, context.AddError, ()=>
                     {
-                        subscription.Dispose();
-                        context.Response.Write("[" + string.Join(",", jsons.Select(x => x.Message)) + "]");
-                        bus.Consumed(jsons.LastOrDefault());
-                        tcs.SetResult(null);
-                        cb(tcs.Task);
+                        try
+                        {
+                            subscription.Dispose();
+                            context.Response.Write("[" + string.Join(",", jsons.Select(x => x.Message)) + "]");
+                            bus.Consumed(jsons.LastOrDefault());
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error("SheepJax exception thrown while writing to long-polling connection", ex);
+                        }
+                        finally
+                        {
+                            tcs.SetResult(null);
+                            cb(tcs.Task);
+                        }
                     });
 
             return tcs.Task;

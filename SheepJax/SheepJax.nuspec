@@ -15,10 +15,11 @@
       <dependency id="Castle.Core" version="2.5.2"/>
       <dependency id="WebActivator" version="1.4.2"/>
       <dependency id="Rx-Main" version="1.0.10621" />
+      <dependency id="Common.Logging" version="2.0.0" />
     </dependencies>
   </metadata>
   <files>
     <file src="bin\Release\SheepJax.dll" target="lib" />
-    <file src="Scripts\sheepJax.js"  target="Content\Scripts\sheepJax-1.1.0.js" />
+    <file src="Scripts\sheepJax.js"  target="Content\Scripts\sheepJax-1.2.js" />
   </files>
 </package>

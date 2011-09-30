@@ -4,10 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Logging;
 
 namespace SheepJax.AsyncHelpers
 {
-    internal static class TplHelper
+    public static class TplHelper
     {
         private static Task MakeEmpty()
         {
@@ -23,31 +24,34 @@ namespace SheepJax.AsyncHelpers
             }
         }
 
-        public static Task Catch(this Task task)
+        public static Task Catch(this Task task, ILog logger, Action<Task> action)
         {
             return task.ContinueWith(t =>
             {
-                if (t != null && t.IsFaulted)
+                if (t.IsFaulted)
                 {
-                    var ex = t.Exception;
-                    Trace.TraceError("SheepJax exception thrown by Task: {0}", ex);
+                    t.Exception.Handle(e => { logger.Error("SheepJax exception thrown by Task", e); return true; });
+                    action(t);
                 }
-                return t;
-            }).Unwrap();
+            });
         }
 
-        public static Task<T> Catch<T>(this Task<T> task)
+        public static Task Catch(this Task task, ILog logger)
+        {
+            return Catch(task, logger, _=>{ });
+        }
+
+        public static Task<T> Catch<T>(this Task<T> task,  ILog logger, Func<Task<T>, T> action)
         {
             return task.ContinueWith(t =>
             {
-                if (t != null && t.IsFaulted)
+                if (t.IsFaulted)
                 {
-                    var ex = t.Exception;
-                    Trace.TraceError("SheepJax exception thrown by Task: {0}", ex);
+                    t.Exception.Handle(e => { logger.Error("SheepJax exception thrown by Task", e); return true; });
+                    return action(t);
                 }
-                return t;
-            })
-            .Unwrap();
+                return t.Result;
+            });
         }
 
         public static Task Finally(this Task task, Action<Task> finalisation)
@@ -63,11 +67,10 @@ namespace SheepJax.AsyncHelpers
         public static Task<T> Finally<T>(this Task<T> task, Action<Task<T>> finalisation)
         {
             return task.ContinueWith(t =>
-            {
-                finalisation(t);
-                return t;
-            })
-            .Unwrap();
+                {
+                    finalisation(t);
+                    return t;
+                }).Unwrap();
         }
 
         public static Task Success(this Task task, Action<Task> successor)
@@ -187,7 +190,7 @@ namespace SheepJax.AsyncHelpers
             return tcs.Task;
         }
 
-        public static Task FromErro(Exception e)
+        public static Task FromError(Exception e)
         {
             return FromError<object>(e);
         }
@@ -209,14 +212,14 @@ namespace SheepJax.AsyncHelpers
             return source.Success(x => selector(x.Result));
         }
 
-        public static Task Sequentially<T, TResult>(this IEnumerable<T> enumerable, Func<T, Task<TResult>> perform, Func<Task, TResult, bool> shouldMoveNext)
+        public static Task Sequentially<T, TResult>(this IEnumerable<T> enumerable, Func<T, Task<TResult>> perform, Func<Task<TResult>, bool> shouldMoveNext)
         {
             var enumerator = enumerable.GetEnumerator();
 
-            if(enumerator.MoveNext())
+            if (enumerator.MoveNext())
             {
                 return DoWhile(() => perform(enumerator.Current),
-                    (task, result) => shouldMoveNext(task, result) && enumerator.MoveNext());
+                    task => shouldMoveNext(task) && enumerator.MoveNext());
             }
             return Empty;
         }
@@ -232,25 +235,25 @@ namespace SheepJax.AsyncHelpers
             }).Unwrap();
         }
 
-        public static Task<T> DoWhile<T>(Func<Task<T>> perform, Func<Task, T, bool> shouldRepeat)
+        public static Task<T> DoWhile<T>(Func<Task<T>> perform, Func<Task<T>, bool> shouldRepeat)
         {
             return perform().ContinueWith(task =>
-                        {
-                            if (!shouldRepeat(task, task.Result))
-                                return task;
+            {
+                if (!shouldRepeat(task))
+                    return task;
 
-                            return DoWhile(perform, shouldRepeat);
-                        }).Unwrap();
+                return DoWhile(perform, shouldRepeat);
+            }).Unwrap();
         }
 
         public static Task Delay(this Task task, TimeSpan timeSpan)
         {
             return task.ContinueWith(t =>
-                                  {
-                                      var tcs = new TaskCompletionSource<Task>();
-                                      new Timer(_ => tcs.SetResult(t)).Change(timeSpan, TimeSpan.FromMilliseconds(-1));
-                                      return tcs.Task;
-                                  }).Unwrap().Unwrap();
+            {
+                var tcs = new TaskCompletionSource<Task>();
+                new Timer(_ => tcs.SetResult(t)).Change(timeSpan, TimeSpan.FromMilliseconds(-1));
+                return tcs.Task;
+            }).Unwrap().Unwrap();
         }
 
         public static Task<T> FromException<T>(Exception exception)

@@ -1,7 +1,6 @@
 (function ($) {
     var me = function (options) {
-        var opt = $.extend({}, me.defaultOptions, options);
-        opt.commands = $.extend({}, me.defaultCommands, opt.commands);
+        var opt = getOptions(options);
 
         opt.before();
         $.ajax({
@@ -11,11 +10,17 @@
             type: opt.type,
             error: opt.error,
             complete: function () { opt.complete(); },
-            success: function (data) { me.handleCallback(opt, data); }
+            success: function (data) { handleCallback(opt, data); }
         });
     };
 
-    me.handleCallback = function (opt, data) {
+    function getOptions(options) {
+        var opt = $.extend({}, me.defaultOptions, options);
+        opt.commands = $.extend({}, me.defaultCommands, opt.commands);
+        return opt;
+    }
+
+    function handleCallback(opt, data) {
         for (var i in data) {
             var func = opt.commands[data[i].FunctionName];
             if (func) {
@@ -25,7 +30,7 @@
                 break;
             }
         }
-    };
+    }
 
     // DEFAULTS
     $.extend(me, {
@@ -39,7 +44,10 @@
             target: undefined,
             error: undefined,
             before: function () { },
-            complete: function () { }
+            complete: function () { },
+            cometError: function () {
+                alert("An error occurred attempting to process your request. This error has been logged.");
+            }
         },
         defaultCommands: {
             RedirectPage: function (url) {
@@ -77,7 +85,11 @@
             CometConnect: function (clientId, batchInterval) {
                 var opt = this;
                 var completed = false;
-                opt.commands._$CometDisconnect = function () { completed = true; };
+                opt.commands._$CometDisconnect = function (success) {
+                    completed = true;
+                    if (!success)
+                        opt.cometError();
+                };
 
                 var longPoll = function () {
                     if (!completed) {
@@ -87,7 +99,7 @@
                             data: { clientId: clientId },
                             type: "POST",
                             success: function (data) {
-                                me.handleCallback(opt, data);
+                                handleCallback(opt, data);
                             },
                             complete: function () {
                                 setTimeout(longPoll, batchInterval);
@@ -101,6 +113,9 @@
         },
         addDefaultCommands: function (commands) {
             $.extend(me.defaultCommands, commands);
+        },
+        handleCallback: function (opt, data) {
+            handleCallback(getOptions(opt), data);
         }
     });
 

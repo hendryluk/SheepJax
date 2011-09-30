@@ -1,5 +1,6 @@
 using System;
 using System.Reactive;
+using Common.Logging;
 using Newtonsoft.Json;
 using System.Linq;
 
@@ -7,6 +8,8 @@ namespace SheepJax.Comet
 {
     public class PollableTaskConverter: JsonConverter
     {
+        private static readonly ILog _logger = LogManager.GetLogger<PollableTask>();
+
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var bus = SheepJaxed.PollingCommandBus;
@@ -17,7 +20,12 @@ namespace SheepJax.Comet
 
             pollable.Start(
                 Observer.Create<SheepJaxInvoke>(i => observer.OnNext(JsonConvert.SerializeObject(i, Formatting.None, converters)), 
-                    observer.OnError, observer.OnCompleted));
+                    ex=>
+                        {
+                            _logger.Error("Exception occured in a pollable task", ex);
+                            observer.OnError(ex);
+                        }, 
+                    observer.OnCompleted));
 
             serializer.Serialize(writer, pollable.Id);
         }

@@ -1,11 +1,13 @@
 using System;
+using Common.Logging;
 
 namespace SheepJax.Comet
 {
     public class PollableTask
     {
-        public Guid Id { get; private set; }
+        public static readonly ILog Logger = LogManager.GetLogger<PollableTask>();
 
+        public Guid Id { get; private set; }
         private readonly Action<IObserver<SheepJaxInvoke>> _startExecution;
 
         /// <summary>
