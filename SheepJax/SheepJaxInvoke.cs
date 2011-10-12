@@ -5,7 +5,7 @@ namespace SheepJax
         public string FunctionName { get; private set; }
         public object[] Args { get; private set; }
 
-        public SheepJaxInvoke(string functionName, object[] args)
+        public SheepJaxInvoke(string functionName, params object[] args)
         {
             FunctionName = functionName;
             Args = args;
