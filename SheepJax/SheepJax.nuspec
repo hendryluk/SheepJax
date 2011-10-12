@@ -19,6 +19,7 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="Sql\MessageStore.sql" target="tools" />
     <file src="bin\Release\SheepJax.dll" target="lib" />
     <file src="Scripts\sheepJax.js"  target="Content\Scripts\sheepJax-1.2.js" />
   </files>
