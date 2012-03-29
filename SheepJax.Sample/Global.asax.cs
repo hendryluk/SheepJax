@@ -23,6 +23,7 @@ namespace SheepJax.Sample
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.IgnoreRoute("SheepJax/LongPoll.axd");
 
             routes.MapRoute(
                 "Default", // Route name
@@ -39,7 +40,7 @@ namespace SheepJax.Sample
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            SheepJaxed.PollingCommandBus = new SqlCommandBus("SheepJax");
+            //SheepJaxed.PollingCommandBus = new SqlCommandBus("SheepJax");
         }
     }
 }

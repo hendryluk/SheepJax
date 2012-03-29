@@ -9,6 +9,30 @@ namespace SheepJax.Tests
     public class ProxyTest
     {
         [Test]
+        public void ProxyTypeShouldBeCached()
+        {
+            var proxy1Called = false;
+            var proxy2Called = false;
+
+            var proxy1 = SheepJaxProxyGenerator.Instance.Create<ITestCommand>(x=> { proxy1Called = true; });
+            var proxy2 = SheepJaxProxyGenerator.Instance.Create<ITestCommand>(x => { proxy2Called = true; });
+
+            proxy1.Foo();
+            proxy2.Foo();
+
+            proxy1.GetType().Should().Be(proxy2.GetType());
+            
+            proxy1Called.Should().BeTrue();
+            proxy2Called.Should().BeTrue();
+        }
+
+        public interface ITestCommand
+        {
+            void Foo();
+        }
+
+
+        [Test]
         public void CanRecordCommands()
         {
             var jax = SheepJaxed.Dynamic(cmd =>

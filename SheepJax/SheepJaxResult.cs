@@ -19,7 +19,7 @@ namespace SheepJax
         public SheepJaxResult(params JsonConverter[] jsonConverters)
             : base(jsonConverters)
         {
-            Command = SheepJaxProxyGenerator.Create<T>(invoke => _invokes.Add(invoke));
+            Command = SheepJaxProxyGenerator.Instance.Create<T>(invoke => _invokes.Add(invoke));
         }
 
         public SheepJaxResult(Action<T> command, params JsonConverter[] jsonConverters)

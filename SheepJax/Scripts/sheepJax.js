@@ -95,7 +95,7 @@
                     if (!completed) {
                         $.ajax({
                             dataType: "json",
-                            url: "/SheepJax/LongPoll",
+                            url: "/SheepJaxLongPoll.axd",
                             data: { clientId: clientId },
                             type: "POST",
                             success: function (data) {

@@ -8,6 +8,7 @@ namespace SheepJax.Sample.Controllers
     {
          public ActionResult Index()
          {
+             Session["fsfdsfsd"] = null;
              return View();
          }
 

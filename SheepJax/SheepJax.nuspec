@@ -6,21 +6,19 @@
     <authors>$author$</authors>
     <licenseUrl>http://sheepjax.codeplex.com/license</licenseUrl>
     <projectUrl>http://sheepjax.codeplex.com</projectUrl>
+    <iconUrl>http://download.codeplex.com/Download?ProjectName=sheepjax&amp;DownloadId=282464</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <tags>Ajax MVC Hijax Comet Long-Polling Reverse-Ajax ASP.NET Async Asynchronous jQuery Json Rx Reactive-Extensions TPL Proxy Node.JS SignalR</tags>
     <dependencies>
-      <dependency id="jQuery" version="1.5.1" />
-      <dependency id="Newtonsoft.Json" version="4.0.2" />
-      <dependency id="Castle.Core" version="2.5.2"/>
-      <dependency id="WebActivator" version="1.4.2"/>
-      <dependency id="Rx-Main" version="1.0.10621" />
-      <dependency id="Common.Logging" version="2.0.0" />
+      <dependency id="jQuery" version="1.5.2" />
     </dependencies>
   </metadata>
   <files>
     <file src="Sql\MessageStore.sql" target="tools" />
     <file src="bin\Release\SheepJax.dll" target="lib" />
-    <file src="Scripts\sheepJax.js"  target="Content\Scripts\sheepJax-1.2.js" />
+    <file src="bin\Release\SheepJax.pdb" target="lib" />
+    <file src="Scripts\sheepJax.js"  target="Content\Scripts\sheepJax-1.2.3.js" />
+    <file src="web.config.transform"  target="Content\web.config.transform" />
   </files>
 </package>

@@ -8,26 +8,14 @@ using Common.Logging;
 
 namespace SheepJax.Comet
 {
-    public class LongPollHttpModule: IHttpModule, IHttpAsyncHandler
+    public class LongPollHttpModule: IHttpAsyncHandler
     {
         private readonly ILog _logger = LogManager.GetLogger<LongPollHttpModule>();
 
         private static readonly TimeSpan LongPollTimeout = TimeSpan.FromSeconds(20);
         private static readonly TimeSpan BatchInterval = TimeSpan.FromMilliseconds(80);
 
-        public void Init(HttpApplication context)
-        {
-            context.PreRequestHandlerExecute += delegate
-                                                    {
-                                                        if (VirtualPathUtility.ToAppRelative(context.Request.Url.AbsolutePath) == "~/SheepJax/LongPoll")
-                                                            context.Context.Handler = this;
-                                                    };
-        }
-
-        public void Dispose()
-        {
-        }
-
+        
         public void ProcessRequest(HttpContext context)
         {
             throw new InvalidOperationException("Synchronous call is not supported");

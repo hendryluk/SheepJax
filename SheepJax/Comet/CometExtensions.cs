@@ -11,7 +11,7 @@ namespace SheepJax.Comet
         {
             ((ISheepJaxInvokable)result.Command).Invoke("CometConnect", new PollableTask(observer =>
                 {
-                    var cmd = SheepJaxProxyGenerator.Create<TCmd>(observer.OnNext);
+                    var cmd = SheepJaxProxyGenerator.Instance.Create<TCmd>(observer.OnNext);
                     createTask(cmd)
                         .Finally(t => observer.OnNext(new SheepJaxInvoke("_$CometDisconnect", !t.IsFaulted)))
                         .Success(_=> observer.OnCompleted())
