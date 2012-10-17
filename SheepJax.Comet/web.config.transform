@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <system.web>
+    <httpHandlers>
+      <add verb="*" path="SheepJaxLongPoll.axd" type="SheepJax.Comet.LongPollHttpModule" />
+    </httpHandlers>
+  </system.web>
+  
+  <system.webServer>
+    <handlers>
+      <add verb="*" name="SheepJaxLongPoll" path="SheepJaxLongPoll.axd" type="SheepJax.Comet.LongPollHttpModule" />
+    </handlers>
+  </system.webServer>
+</configuration>
