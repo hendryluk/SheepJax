@@ -6,12 +6,13 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using SheepJax.AsyncHelpers;
+using System.Linq;
 
 namespace SheepJax.Comet.Buses
 {
     public class InProcCommandBus: ICommandBus
     {
-        private readonly LinkedList<CommandMessage> _messages = new LinkedList<CommandMessage>();
+        private readonly IDictionary<Guid, LinkedList<CommandMessage>> _clientMessages = new Dictionary<Guid, LinkedList<CommandMessage>>(); 
         private static readonly TimeSpan CollectGarbageInterval = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan MessageExpiry = TimeSpan.FromSeconds(120);
         private readonly ReaderWriterLockSlim _messagesLock = new ReaderWriterLockSlim();
@@ -24,30 +25,35 @@ namespace SheepJax.Comet.Buses
 
         private void CollectGarbage()
         {
-            var node = _messages.First;
             var now = DateTime.Now;
-            while(node != null && now - node.Value.CreatedUtcTime > MessageExpiry)
+            foreach (var kv in _clientMessages.Where(x => x.Value.All(m => now - m.CreatedUtcTime > MessageExpiry)).ToArray())
             {
-                var nextNode = node.Next;
-                _messages.Remove(node);
-                node = nextNode;
+                _clientMessages.Remove(kv.Key);
             }
         }
 
         public IObservable<CommandMessage> GetObservable(Guid clientId)
         {
-            return GetObservable()
+            LinkedList<CommandMessage> messages;
+            if (!_clientMessages.TryGetValue(clientId, out messages))
+                return Observable.Create<CommandMessage>(obs =>
+                    { 
+                        obs.OnError(new CometException("ClientId not valid: " + clientId));
+                        return () => { };
+                    });
+
+            return GetObservable(messages)
                 .Where(x => x.ClientId == clientId);
         }
 
-        private IObservable<CommandMessage> GetObservable()
+        private IObservable<CommandMessage> GetObservable(LinkedList<CommandMessage> messages)
         {
             return Observable.Create<CommandMessage>(obs =>
             {
                 LinkedListNode<CommandMessage> lastNode = null;
                 while (true)
                 {
-                    for (var next = (lastNode == null) ? _messages.First : lastNode.Next; next != null; next = next.Next)
+                    for (var next = (lastNode == null) ? messages.First : lastNode.Next; next != null; next = next.Next)
                     {
                         obs.OnNext(next.Value);
                         lastNode = next;
@@ -56,7 +62,7 @@ namespace SheepJax.Comet.Buses
                     if (!_messagesLock.TryEnterReadLock(10)) continue;
                     try
                     {
-                        if (_messages.Last == lastNode)
+                        if (messages.Last == lastNode)
                             return _messageAdded.Subscribe(obs);
                     }
                     finally { _messagesLock.ExitReadLock(); }
@@ -71,7 +77,8 @@ namespace SheepJax.Comet.Buses
 
             using(_messagesLock.BeginUpgradeableReadLock())
             {
-                var node = _messages.Last;
+                var messages = _clientMessages[last.ClientId];
+                var node = messages.Last;
                 while (node != null && node.Value != last)
                     node = node.Previous;
 
@@ -94,15 +101,17 @@ namespace SheepJax.Comet.Buses
 
         public IObserver<string> GetObserver(Guid clientId)
         {
+            var messages = new LinkedList<CommandMessage>();
+            _clientMessages.Add(clientId, messages);
             return Observer.Create<string>(msg =>
                     {
                         using(_messagesLock.BeginWriteLock())
                         {
                             var message = new CommandMessage{ ClientId = clientId, Message = msg, CreatedUtcTime = DateTime.Now };
-                            _messages.AddLast(message);
+                            messages.AddLast(message);
                             _messageAdded.OnNext(message);
                         }
-                    });
+                    }, ()=> _clientMessages.Remove(clientId));
         }
     }
 }
