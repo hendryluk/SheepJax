@@ -3,7 +3,7 @@
         var opt = getOptions(options);
 
         opt.before();
-        $.ajax({
+        return $.ajax({
             dataType: opt.dataType,
             url: opt.url,
             data: opt.data,
