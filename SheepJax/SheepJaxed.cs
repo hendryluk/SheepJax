@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using SheepJax.Comet;
-using SheepJax.Comet.Buses;
 
 namespace SheepJax
 {
     public class SheepJaxed
     {
         public static IList<Func<ControllerContext, JsonConverter>> DefaultJsonConverterFactories { get; set; }
-        public static ICommandBus PollingCommandBus { get; set; }
-
+        
         static SheepJaxed()
         {
             var dateTimeConverter = new JavaScriptDateTimeConverter();
@@ -20,11 +17,9 @@ namespace SheepJax
                                                 {
                                                     _ => dateTimeConverter, 
                                                     _ => new ViewResultWrapperConverter(),
-                                                    _=> new PollableTaskConverter(),
                                                     context => new ViewResultConverter(context)
                                                 };
 
-            PollingCommandBus = new InProcCommandBus();
         }
 
         public static SheepJaxResult<T> On<T>(Action<T> command = null, params JsonConverter[] jsonConverters)

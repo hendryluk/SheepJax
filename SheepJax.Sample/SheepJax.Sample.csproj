@@ -16,9 +16,15 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
-    <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>C:\Dev\Git\SheepJax\Backup\SheepJax.Sample\</UpgradeBackupLocation>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,7 +75,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\BlairController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ListeningSantaController.cs" />
     <Compile Include="Controllers\SleepySantaController.cs" />
@@ -109,10 +114,9 @@
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\BlairDialog.js" />
-    <Content Include="Scripts\jquery-1.5.2-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.5.2.js" />
-    <Content Include="Scripts\jquery-1.5.2.min.js" />
+    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="Scripts\jquery-2.0.3.js" />
+    <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.min.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
@@ -120,7 +124,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
-    <Content Include="Scripts\sheepJax.js" />
+    <Content Include="Scripts\sheepjax-comet.js" />
+    <None Include="Scripts\sheepjax.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -145,6 +150,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Scripts\jquery-2.0.3.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Blair\Index.cshtml" />
@@ -162,6 +168,10 @@
     <Content Include="Views\Blair\SomeDialogContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SheepJax.Comet\SheepJax.Comet.csproj">
+      <Project>{fcb08bfd-46b3-43c0-aa64-c12ecbbe3dcd}</Project>
+      <Name>SheepJax.Comet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SheepJax\SheepJax.csproj">
       <Project>{3BB2E4CB-E442-4D70-BF79-8AA70C419539}</Project>
       <Name>SheepJax</Name>
@@ -187,13 +197,15 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56357</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://SheepJax.Sample</IISUrl>
+          <IISUrl>
+          </IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://SheepJax.Sample/</IISAppRootUrl>
+          <IISAppRootUrl>
+          </IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <licenseUrl>http://sheepjax.codeplex.com/license</licenseUrl>
+    <projectUrl>http://sheepjax.codeplex.com</projectUrl>
+    <iconUrl>http://download.codeplex.com/Download?ProjectName=sheepjax&amp;DownloadId=282464</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <tags>Ajax MVC Hijax Comet Long-Polling Reverse-Ajax ASP.NET Async Asynchronous jQuery Json Rx Reactive-Extensions TPL Proxy Node.JS SignalR</tags>
+    <dependencies>
+      <dependency id="sheepjax" version="1.5.2" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Sql\MessageStore.sql" target="tools" />
+    <file src="bin\Release\SheepJax.Comet.dll" target="lib" />
+    <file src="bin\Release\SheepJax.Comet.pdb" target="lib" />
+    <file src="Scripts\sheepjax-comet.js"  target="Content\Scripts\sheepjax-comet-1.3.0.js" />
+    <file src="web.config.transform"  target="Content\web.config.transform" />
+  </files>
+</package>

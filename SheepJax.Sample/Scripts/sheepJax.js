@@ -3,7 +3,7 @@
         var opt = getOptions(options);
 
         opt.before();
-        $.ajax({
+        return $.ajax({
             dataType: opt.dataType,
             url: opt.url,
             data: opt.data,
@@ -81,34 +81,6 @@
             },
             FunctionUndefined: function (data, functionName) {
                 $.error('FunctionName ' + functionName + ' does not exist on the commands');
-            },
-            CometConnect: function (clientId, batchInterval) {
-                var opt = this;
-                var completed = false;
-                opt.commands._$CometDisconnect = function (success) {
-                    completed = true;
-                    if (!success)
-                        opt.cometError();
-                };
-
-                var longPoll = function () {
-                    if (!completed) {
-                        $.ajax({
-                            dataType: "json",
-                            url: "/SheepJaxLongPoll.axd",
-                            data: { clientId: clientId },
-                            type: "POST",
-                            success: function (data) {
-                                handleCallback(opt, data);
-                            },
-                            complete: function () {
-                                setTimeout(longPoll, batchInterval);
-                            }
-                        });
-                    }
-                };
-
-                setTimeout(longPoll, batchInterval);
             }
         },
         addDefaultCommands: function (commands) {
@@ -170,8 +142,8 @@
     };
 
     $.fn.sheepHijaxLive = function (options) {
-        this.live("submit", function (e) { hijaxForm(e, options); });
-        this.live("click", function (e) { return hijaxLink(e, options); });
+        this.on("submit", function (e) { hijaxForm(e, options); });
+        this.on("click", function (e) { return hijaxLink(e, options); });
         return this;
     };
 

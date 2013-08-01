@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepJax.Tests", "SheepJax.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepJax.Sample", "SheepJax.Sample\SheepJax.Sample.csproj", "{50D46D11-2548-40B3-9CF3-EA2FABC31498}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SheepJax.Comet", "SheepJax.Comet\SheepJax.Comet.csproj", "{FCB08BFD-46B3-43C0-AA64-C12ECBBE3DCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{50D46D11-2548-40B3-9CF3-EA2FABC31498}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50D46D11-2548-40B3-9CF3-EA2FABC31498}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50D46D11-2548-40B3-9CF3-EA2FABC31498}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCB08BFD-46B3-43C0-AA64-C12ECBBE3DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCB08BFD-46B3-43C0-AA64-C12ECBBE3DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCB08BFD-46B3-43C0-AA64-C12ECBBE3DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCB08BFD-46B3-43C0-AA64-C12ECBBE3DCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
